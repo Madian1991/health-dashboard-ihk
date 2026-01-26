@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>ProjectHub — Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+</head>
+
+<body>
+
+<script>
+    if (!localStorage.getItem("loggedIn")) {
+      window.location.href = "login.html";
+    }
+</script>
+
+<aside id="sidebar">
+    <div class="logo">
+        <span class="logo-icon">🟣</span>
+        ProjectHub
+    </div>
+
+    <div class="menu-section">
+        <small>MODULE</small>
+        <a id="btn-assistent"><span>🧭</span> Assistent</a>
+        <a class="active"><span>❤️</span> Health Dashboard</a>
+        <a id="btn-diary"><span>🧾</span> Developer Diary</a>
+    </div>
+
+    <div class="menu-section">
+        <small>ALLGEMEIN</small>
+        <a id="btn-archive"><span>📁</span> Archiv</a>
+        <a id="btn-settings"><span>⚙️</span> Einstellungen</a>
+        <a onclick="logout()"><span>🚪</span> Logout</a>
+    </div>
+</aside>
+
+<main id="content">
+    <header class="dashboard-header">
+        <h1>ProjectHub — Health Dashboard</h1>
+        <div class="status-boxes">
+            <span id="btn-aktiv">Aktiv: 4</span>
+            <span id="btn-risiko">Risiko: 3</span>
+            <span id="btn-ueberfaellig">Überfällig: 3</span>
+        </div>
+    </header>
+
+    <section id="project-list" class="project-grid"></section>
+</main>
+
+<!-- ===== DETAILS MODAL ===== -->
+<div id="details-modal" style="display:none;">
+    <div class="modal-backdrop" onclick="closeDetails()"></div>
+
+    <div class="modal-box">
+        <h3 id="modal-title"></h3>
+
+        <div class="modal-content">
+            <!--div><strong>Schritt:</strong> <span id="modal-step"></span></div-->
+            <!--div><strong>Projektstart:</strong> <span id="modal-start"></span></div-->
+            <!--div><strong>Deadline:</strong> <span id="modal-deadline"></span></div-->
+            <!--div><strong>Team:</strong> <span id="modal-team"></span></div-->
+        </div>
+
+        <div id="modal-teamlist"></div>
+
+        <div class="modal-actions">
+            <button onclick="closeDetails()">Schließen</button>
+        </div>
+    </div>
+</div>
+
+<script src="dashboard.js"></script>
+
+<script>
+    // 🔹 Logout
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    }
+
+    // 🔹 Sidebar Navigation
+    document.getElementById("btn-assistent").addEventListener("click", (e) => {
+      e.preventDefault();
+      openAssistent();
+    });
+
+    document.getElementById("btn-diary").addEventListener("click", (e) => {
+      e.preventDefault();
+      openDiary();
+    });
+
+    document.getElementById("btn-archive").addEventListener("click", (e) => {
+      e.preventDefault();
+      openArchive();
+    });
+
+    document.getElementById("btn-settings").addEventListener("click", (e) => {
+      e.preventDefault();
+      openSettings();
+    });
+
+    // 🔹 Active highlight im Menü
+    const menuItems = document.querySelectorAll('#sidebar .menu-section a');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        menuItems.forEach(el => el.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+</script>
+
+</body>
+</html>

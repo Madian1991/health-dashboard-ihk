@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Projekt</title>
+    <style>
+        /* حركة بسيطة بدون ما نعمل تصميم جديد */
+        #loading { display: inline-block; }
+        .hidden { display: none; }
+    </style>
+</head>
+
+<body>
+<h1 id="project-title">Projekt</h1>
+
+<p id="loading">Lädt Daten vom Server…</p>
+<p id="error" class="hidden">Fehler beim Laden.</p>
+
+<div id="content" class="hidden">
+    <p><strong>Status:</strong> <span id="p-status">-</span></p>
+    <p><strong>Progress:</strong> <span id="p-progress">-</span></p>
+    <p><strong>Tasks:</strong> <span id="p-tasks">-</span></p>
+
+    <button onclick="window.location.href='index.html'">Zurück</button>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+const titleEl = document.getElementById("project-title");
+const loadingEl = document.getElementById("loading");
+const errorEl = document.getElementById("error");
+const contentEl = document.getElementById("content");
+
+const statusEl = document.getElementById("p-status");
+const progressEl = document.getElementById("p-progress");
+const tasksEl = document.getElementById("p-tasks");
+
+if (!id) {
+  titleEl.textContent = "Kein Projekt gewählt";
+  loadingEl.classList.add("hidden");
+  errorEl.textContent = "Keine Projekt-ID übergeben.";
+  errorEl.classList.remove("hidden");
+} else {
+  titleEl.textContent = "Projekt #" + id;
+
+    fetch("/api/projects")
+
+
+    .then(res => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(list => {
+      const p = (Array.isArray(list) ? list : []).find(x => String(x.id) === String(id));
+
+      if (!p) throw new Error("Projekt nicht gefunden");
+
+      // عنوان الصفحة يصير اسم المشروع الحقيقي من الـ DB
+      titleEl.textContent = p.name ?? ("Projekt #" + id);
+
+      statusEl.textContent = p.status ?? "-";
+      progressEl.textContent = (p.progress ?? "-") + "%";
+      tasksEl.textContent = `${p.doneTasks ?? "-"} / ${p.totalTasks ?? "-"}`;
+
+      loadingEl.classList.add("hidden");
+      contentEl.classList.remove("hidden");
+    })
+    .catch(err => {
+      console.error(err);
+      loadingEl.classList.add("hidden");
+      errorEl.classList.remove("hidden");
+      errorEl.textContent = "Fehler: " + err.message;
+    });
+}
+
+</script>
+</body>
+</html>
