@@ -27,3 +27,5 @@ im Ordner `docs`.
 ## Hinweis
 Dieses Repository dient zu Dokumentations- und Bewertungszwecken
 im Rahmen des IHK-Abschlussprojekts.
+## Screenshots
+![Dashboard](docs/dashboard.png)
